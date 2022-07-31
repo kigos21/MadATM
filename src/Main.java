@@ -21,7 +21,7 @@ public class Main {
         String name;
         while (true) {
             System.out.print("Name of the account \n>> ");
-            name = scanner.next().toLowerCase().trim();
+            name = scanner.nextLine().trim();
             if (name.isBlank()) {
                 System.out.println("Invalid name, try again.");
                 continue;
@@ -74,16 +74,17 @@ public class Main {
     }
 
     public static char askTransact() {
-        char[] validInput = {'c','d','w','h'};
+        char[] validInput = {'c','d','w','h','q'};
         char transactChoice;
         while (true) {
-            System.out.println("================ \nMadATM is Online \n================ ");
+            System.out.println("\n================ \nMadATM is Online \n================ ");
             System.out.println("[C]heck Balance ");
             System.out.println("[D]eposit Cash ");
             System.out.println("[W]ithdraw Cash ");
             System.out.println("C[H]hange PIN ");
+            System.out.println("[Q]uit ");
             System.out.println();
-            System.out.print("Transaction [C,D,W,H]: ");
+            System.out.print("Transaction [C,D,W,H,Q]: ");
             transactChoice = scanner.nextLine().toLowerCase().charAt(0);
 
             for (char c: validInput)
@@ -95,29 +96,20 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Account[] accounts = new Account[1];
-        boolean initialized = false;
-
+        Account account = createAccount();
+        System.out.println("Account created! Proceed to login. ");
         while (true) {
-            System.out.println("================== \nWelcome to MadATM! \n================== ");
-            if (!initialized) {
-                Account account = createAccount();
-                accounts[0] = account;
-                System.out.println("Account created! Proceed to login. ");
-                initialized = true;
-                continue;
-            }
-
-            Account account = accounts[0];
+            System.out.println("\n================== \nWelcome to MadATM! \n================== ");
             if (askPin(account)) {
                 System.out.println("Logging you in... ");
             } else {
-                System.out.println("3 failed attempts, forcing system shutdown... ");
+                System.out.println("3 failed attempts, forcing system shutdown... \n\n");
                 System.exit(0);
             }
 
             while (true) {
                 char transact = askTransact();
+                System.out.println("\n==================");
                 if (transact == 'c') {
                     System.out.println("Account name:    " + account.getName());
                     System.out.println("Account balance: Php " + account.checkBal());
@@ -132,6 +124,7 @@ public class Main {
                                 throw new Exception();
                             account.deposit(deposit_amt);
                         } catch (Exception e) {
+                            e.printStackTrace();
                             System.out.println("Invalid input, try again. ");
                             scanner.nextLine();
                             continue;
@@ -151,6 +144,7 @@ public class Main {
                                 throw new Exception();
                             account.withdraw(withdraw_amt);
                         } catch (Exception e) {
+                            e.printStackTrace();
                             System.out.println("Invalid input or insufficient funds, try again. ");
                             scanner.nextLine();
                             continue;
@@ -160,16 +154,24 @@ public class Main {
                         break;
                     }
 
-                } else {
+                } else if (transact == 'h') {
                     System.out.print("Input your CURRENT PIN: ");
                     String currentPinInput = scanner.nextLine();
                     System.out.print("Input your NEW PIN: ");
                     String newPinInput = scanner.nextLine();
-                    System.out.println("Verify NEW PIN: ");
+                    System.out.print("Verify NEW PIN: ");
                     String verificationInput = scanner.nextLine();
-                    if (currentPinInput.equals(account.getPin())) {
-
+                    if (currentPinInput.equals(account.getPin()) && (newPinInput.equals(verificationInput))) {
+                        account.setPin(newPinInput);
+                        System.out.println("Your PIN was changed successfully. Please re-login. ");
+                        break;
+                    } else {
+                        System.out.println("Incorrect details, PIN change was unsuccessful. ");
                     }
+
+                } else {
+                    System.out.println("Thank you for banking with us! Goodbye... \n\n");
+                    System.exit(0);
                 }
             }
         }
