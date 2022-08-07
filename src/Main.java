@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
@@ -6,13 +5,17 @@ public class Main {
     public static Scanner scanner = new Scanner(System.in);
 
     public static void addInterest(Account account) {
-        if (account.getBalance() > 10000)
-            account.setBalance(account.getBalance()*1.05);
+        if (account.getBalance() > 10000) {
+            account.setBalance(account.getBalance() * 1.05);
+            System.out.println("5% interest applied! Keep balance above Php 10000 to enjoy more benefits. ");
+        }
     }
 
     public static void chargePenalty(Account account) {
-        if (account.getBalance() < 5000)
-            account.setBalance(account.getBalance()*0.98);
+        if (account.getBalance() < 5000) {
+            account.setBalance(account.getBalance() * 0.98);
+            System.out.println("Account was penalized for not maintaining Php 5000. ");
+        }
     }
 
     public static Account createAccount() {
@@ -129,6 +132,7 @@ public class Main {
                             scanner.nextLine();
                             continue;
                         }
+                        addInterest(account);
                         System.out.println("[ updated ] Account balance: Php " + account.getBalance());
                         scanner.nextLine();
                         break;
@@ -149,6 +153,7 @@ public class Main {
                             scanner.nextLine();
                             continue;
                         }
+                        chargePenalty(account);
                         System.out.println("[ updated ] Account balance: Php " + account.getBalance());
                         scanner.nextLine();
                         break;
@@ -162,7 +167,7 @@ public class Main {
                     System.out.print("Verify NEW PIN: ");
                     String verificationInput = scanner.nextLine();
                     if (currentPinInput.equals(account.getPin()) && (newPinInput.equals(verificationInput))) {
-                        account.setPin(newPinInput);
+                        account.changePin(newPinInput);
                         System.out.println("Your PIN was changed successfully. Please re-login. ");
                         break;
                     } else {
@@ -176,5 +181,4 @@ public class Main {
             }
         }
     }
-
 }

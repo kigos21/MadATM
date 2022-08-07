@@ -1,7 +1,7 @@
 public class Account {
     private String name;
     private String pin = "mad123";
-    private double balance = 0;
+    private double balance;
 
     public Account(String name, double balance) {
         this.name = name;
@@ -36,9 +36,8 @@ public class Account {
         this.balance += amount;
     }
 
-    public double withdraw(double amount) {
+    public void withdraw(double amount) {
         this.balance -= amount;
-        return amount;
     }
 
     public double checkBal() {
